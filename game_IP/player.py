@@ -3,9 +3,9 @@ from settings import COR_PLAYER, GRAVIDADE, VEL_PULO
 
 class Player:
     def __init__(self, x, y):
-        self.rect = pg.Rect(x, y, 40, 70)
-        self.pos = pg.Vector2(x, y) # posição atual
-        self.vel = pg.Vector2(0, 0) # velocidade atual
+        self.rect = pg.Rect(x, y, 40, 70) # (retângulo) corpo prótotipo do player para colisão e para referencial. 
+        self.pos = pg.Vector2(x, y) # vai ser usado para posição e representa a posição atual
+        self.vel = pg.Vector2(0, 0) # vai ser usado para velocidade e representa a velocidade atual
         self.velocidade = 300
         self.no_chao = False # identificar pulo ou n
         
@@ -25,12 +25,18 @@ class Player:
 
         # mecanica de gravidade pra o personagem voltar ao chão.
         self.vel.y += GRAVIDADE * dt
-
+        # toda ideia de mudança de posição partem de uma mesma premissa:
+        # primeiro a velocidade altera conforme aperto da tecla de movimento.
+        # segundo a posição é incrementada pela velocidade "60 vezes por segundo"
+        # terceiro a posição é arredondada e atualiza a coordenada do retângulo na tela "60 vezes por segundo"
+        
         # movimento na coordenada x e colisões
         self.pos.x += self.vel.x * dt
         self.rect.x = round(self.pos.x)
         for p in plataformas:
-            if self.rect.colliderect(p):
+            if self.rect.colliderect(p): # colliderect é uma função para identificar sobreposições entre formas na tela
+                # a ideia é usar para identificar a colisão de superfícies.
+
                 if self.vel.x > 0: # andando pra direita
                     self.rect.right = p.left
                 elif self.vel.x < 0: # para a esquerda
