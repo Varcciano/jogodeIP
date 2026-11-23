@@ -5,16 +5,22 @@ por padrão uma quantidade x, a gente põe aqui e importa para os outros arquivo
 e de inimigos.py.
 """
 # Proporções de tela e FPS do game
-LARGURA = 960
-ALTURA = 540
+ESCALA = 1
+LARGURA = 480
+ALTURA = 270
 FPS = 60
 #
 
 # Cor do player e da tela de fundo. 
 COR_FUNDO = (20, 25, 35)
 COR_PLAYER = (0, 200, 255)
+COR_CHAO = (60, 80, 110)
+COR_PLATAFORMA = (90, 130, 160)
 #
 
 # Física do game
-GRAVIDADE = 1800
-VEL_PULO = -650
+GRAVIDADE = 900
+VEL_PULO = -325
+VEL_MAX_QUEDA = 500
+TEMPO_DESCER = 0.2
+VEL_DESCER = 75
