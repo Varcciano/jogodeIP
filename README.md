@@ -18,3 +18,4 @@ quando a variável é False e ela so volta a ser False após o player ter "aterr
 
 No mais foi feita uma reorganização da escala principal do jogo e de sintaxe do código pra ficar mais organizado e melhor
 de trabalhar.
+Estamos trabalhando...
