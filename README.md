@@ -1,7 +1,4 @@
 ## Membros da Equipe
-
----
-
 ### Heitor Samuel (hsso)
 ### Daniel França (dfbdf)
 ### Thiago Ramalho (trs7)
@@ -11,8 +8,6 @@
 ---
 
 ## Imagens do Jogo
-
----
 
 *conteúdo aqui*
 
