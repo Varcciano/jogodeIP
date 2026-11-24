@@ -2,11 +2,11 @@
 
 --
 
-### Heitor Samuel <hsso>
-### Daniel França <dfbdf>
-### Thiago Ramalho <trs7>
-### Everton Júnior <ejgc>
-### Marcelo Duque <mdr3>
+### Heitor Samuel (hsso)
+### Daniel França (dfbdf)
+### Thiago Ramalho (trs7)
+### Everton Júnior (ejgc)
+### Marcelo Duque (mdr3)
 
 ---
 
