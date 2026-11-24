@@ -1,6 +1,6 @@
 ## Membros da Equipe
 
---
+---
 
 ### Heitor Samuel (hsso)
 ### Daniel França (dfbdf)
@@ -12,7 +12,7 @@
 
 ## Imagens do Jogo
 
---
+---
 
 *conteúdo aqui*
 
@@ -20,7 +20,7 @@
 
 ## Arquitetura do Projeto
 
---
+---
 
 *conteúdo aqui*
 
@@ -28,7 +28,7 @@
 
 ## Ferramentas Utilizadas
 
---
+---
 
 Linguagem usada: Python
 Bibliotecas: Pygame
@@ -37,7 +37,7 @@ Bibliotecas: Pygame
 
 ## Divisão do Projeto
 
---
+---
 
 -> Daniel França - Mecânicas e lógica do Player principal. 
 -> Heitor Samuel - Coletáveis/Colecionáveis e HUD.
@@ -49,7 +49,7 @@ Bibliotecas: Pygame
 
 ## Conceitos Aprendidos em Sala
 
---
+---
 
 *conteúdo aqui*
 
@@ -57,7 +57,7 @@ Bibliotecas: Pygame
 
 ## Desafios Enfrentados
 
---
+---
 
 *conteúdo aqui*
 
@@ -65,7 +65,7 @@ Bibliotecas: Pygame
 
 ## Lições Aprendidas
 
---
+---
 
 *conteúdo aqui*
 
