@@ -7,21 +7,25 @@
 
 ---
 
+
 ## Imagens do Jogo
 *conteúdo aqui*
 
 ---
+
 
 ## Arquitetura do Projeto
 *conteúdo aqui*
 
 ---
 
+
 ## Ferramentas Utilizadas
 Linguagem usada: Python
 Bibliotecas: Pygame
 
 ---
+
 
 ## Divisão do Projeto
 -> Daniel França - Mecânicas e lógica do Player principal. 
@@ -32,15 +36,18 @@ Bibliotecas: Pygame
 
 ---
 
+
 ## Conceitos Aprendidos em Sala
 *conteúdo aqui*
 
 ---
 
+
 ## Desafios Enfrentados
 *conteúdo aqui*
 
 ---
+
 
 ## Lições Aprendidas
 *conteúdo aqui*
