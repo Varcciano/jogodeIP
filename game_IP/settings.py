@@ -24,3 +24,8 @@ VEL_PULO = -325
 VEL_MAX_QUEDA = 500
 TEMPO_DESCER = 0.2
 VEL_DESCER = 75
+
+# Colecionáveis
+TAM_COLETAVEL = 8          # tamanho (px) do quadradinho do item (moeda)
+COR_SUCATA = (255, 200, 60) # cor amarela para a moeda
+VALOR_SUCATA = 1           # quanto cada sucata (moeda) vale
