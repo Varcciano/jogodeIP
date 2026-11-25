@@ -29,3 +29,8 @@ VEL_DESCER = 75
 TAM_COLETAVEL = 8          # tamanho (px) do quadradinho do item (moeda)
 COR_SUCATA = (255, 200, 60) # cor amarela para a moeda
 VALOR_SUCATA = 1           # quanto cada sucata (moeda) vale
+
+# HUD (interface)
+COR_HUD_TEXTO = (220, 235, 245)  # cor do texto (branco azulado)
+TAM_FONTE_HUD = 18               # tamanho da letra (o canvas é pequeno: 480x270)
+MARGEM_HUD = 6                   # distância (px) entre o HUD e a borda da tela

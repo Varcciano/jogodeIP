@@ -11,6 +11,7 @@ from settings import LARGURA, ALTURA, FPS, COR_FUNDO
 from player import Player 
 from levels import Level1
 from colecionaveis import Sucata
+from hud import HUD
 # ===================================================
 
 pg.init() # inicializa a biblioteca pygame.
@@ -40,6 +41,8 @@ lista_sucatas = [
 # Contador de sucata que o jogador já pegou. Começa em 0.
 # (Por enquanto coloquei aqui no main.py pra não mexer no player.py no momento.)
 sucata_total = 0
+
+hud = HUD() # cria o objeto HUD (a fonte é criada aqui dentro, uma vez só)
 
 while True: # sequencia lógica da run do jogo: eventos -> atualização das lógicas -> desenhamento -> disposição do que foi desenhado.
 
@@ -75,7 +78,7 @@ while True: # sequencia lógica da run do jogo: eventos -> atualização das ló
             if player.rect.colliderect(sucata.rect):
                 sucata.coletar() # diz que a moeda foi coletada
                 sucata_total += sucata.valor # soma o valor da sucata ao contador
-                print('Sucata:', sucata_total) # print temporário para teste
+
 
         # lista nova das sucatas que ainda não foram coletadas
         nova_lista_sucatas = []
@@ -91,6 +94,7 @@ while True: # sequencia lógica da run do jogo: eventos -> atualização das ló
         sucata.draw(canvas)
     
     player.draw(canvas) # criação do player na tela
+    hud.draw(canvas, sucata_total)   # HUD por último = fica por cima de tudo
     pg.display.flip() # dispõe na tela o que foi desenhado.
 
     jw, jh = janela.get_size()
