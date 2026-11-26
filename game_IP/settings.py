@@ -11,7 +11,7 @@ ALTURA = 270
 FPS = 60
 #
 
-# Cor do player e da tela de fundo. 
+# Cor do player e da tela de fundo.
 COR_FUNDO = (20, 25, 35)
 COR_PLAYER = (0, 200, 255)
 COR_CHAO = (60, 80, 110)
@@ -24,3 +24,8 @@ VEL_PULO = -325
 VEL_MAX_QUEDA = 500
 TEMPO_DESCER = 0.2
 VEL_DESCER = 75
+
+# cor do menu do jogo
+COR_TITULO = (230, 230, 255)
+COR_TEXTO = (150, 160, 180)
+COR_SELECIONADO = (255, 210, 80)
