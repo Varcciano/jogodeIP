@@ -70,6 +70,12 @@ while True: # sequencia lógica da run do jogo: eventos -> atualização das ló
     if not pausado: # so atualiza os eventos do jogo enquanto o jogador estiver jogando de fato. 
         player.update(dt, levels.solidos, levels.plataformas)
 
+        for inimigo in levels.inimigos[:]: #gerenciador do ciclo de vida dos inimigos
+            inimigo.update(dt, levels.solidos, levels.plataformas, player, levels.projeteis_inimigos)
+            if not inimigo.vivo:
+                levels.inimigos.remove(inimigo) # remove inimigo morto da lista de inimigos
+
+
         # --- COLETA DE SUCATA ---
         # Passa por cada sucata da lista, uma de cada vez.
         for sucata in lista_sucatas:

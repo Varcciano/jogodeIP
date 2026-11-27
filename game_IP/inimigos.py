@@ -3,7 +3,7 @@ from settings import(GRAVIDADE, LARGURA, ALTURA, VEL_MAX_QUEDA, COR_INIMIGO, VEL
 
 #classe base para inimigos, servirá como base para variações
 class Inimigo:
-    def __init__(self, x, y, largura=30, altura=15, vida=1, velocidade=VEL_INIMIGO, cor=COR_INIMIGO):
+    def __init__(self, x, y, largura=20, altura=30, vida=1, velocidade=VEL_INIMIGO, cor=COR_INIMIGO):
         self.spawn = pg.Vector2(x, y) #coordenada de spawn
         self.pos = pg.Vector2(x, y) #posição exata
         self.vel = pg.Vector2(0, 0) #vetor de velocidade atual
@@ -79,4 +79,84 @@ class Inimigo:
                     self.no_chao = True #sinalizando que inimigo está no chão
 
         return bateu_parede #função retorna se inimigo bateu em algum sólido ou parede invisível, para que a IA do inimigo possa mudar de direção
- 
+
+#==========================================================================================================================================================================================================
+#-----------------SENSORES DE IA(FERRAMENTAS QUE AUXILIARÃO NA PERCEPÇÃO DO AMBIENTE/PLAYER)---------------------------------------------------------------------------------------------------------------
+##==========================================================================================================================================================================================================
+    
+    #projeta um pequeno retangulo na frente do inimigo para detectar se há chão
+    def sensor_chao(self, solidos, plataformas):
+        if self.direcao == 1:
+            distancia_relativa = self.rect.width + 2
+        else:
+            distancia_relativa = -4
+        sensor = pg.Rect(self.rect.x + distancia_relativa, self.rect.bottom + 2, 2, 4)
+        for s in solidos + plataformas:
+            if sensor.colliderect(s):
+                return True
+        return False
+
+    #retorna a distância entre o inimigo e o centro do alvo (player) usando a fórmula de distância euclidiana
+    def distancia_para(self, alvo):
+        return pg.Vector2(self.rect.center).distance_to(alvo.rect.center)
+
+    #função útil para atiradores e voadores
+    #retorna um vetor unitário apontando na direção do alvo (player)
+    def direcao_para(self, alvo):
+        vetor = pg.Vector2(alvo.rect.center) - pg.Vector2(self.rect.center)
+        if vetor.length() > 0:
+            return vetor.normalize()
+        else:
+            return pg.Vector2(0, 0)
+
+    #função para encarar alvo horizontalmente
+    def olhar_para(self, alvo):
+        if alvo.rect.centerx > self.rect.centerx:
+            self.direcao = 1
+        else:
+            self.direcao = -1
+
+#===========================================================================================================================
+#---------Vida e interface-------------------------------------------------------------------------------------------------
+#=========================================================================================================================== 
+
+    #desconta HP e sinaliza morte
+    def receber_dano(self, qtd=1):
+        self.vida -= qtd
+        if self.vida <= 0:
+            self.vivo = False
+
+    #detecta se o inimigo caiu em um buraco fora da área jogável
+    def fora_da_tela(self):
+        return self.rect.top > ALTURA + 200
+
+    #método para implementar subclasses do inimigo
+    def update(self, dt, solidos, plataformas, player, projeteis):
+        raise NotImplementedError("O método update deve ser implementado nas subclasses de Inimigo.")
+
+    #renderização base, provisória até que seja implementado os sprites
+    def draw(self, tela):
+        pg.draw.rect(tela, self.cor, self.rect)
+
+#==========================================================================================================================
+#----------------Primeira implementação concreta de Inimigo-------------------------------------------------
+#=========================================================================================================================
+
+class Patrulheiro(Inimigo):
+
+    def update(self, dt, solidos, plataformas, player, projeteis):
+        if self.no_chao and not self.sensor_chao(solidos, plataformas): #se tá pisando no chão e tem chão à frente
+            self.direcao *= -1 #inverte a direção do inimigo
+
+        #aplicação da física: define velocidade no eixo x, aplica gravidade e resolve colisões
+        self.vel.x = self.direcao * self.velocidade 
+        self.aplicar_gravidade(dt)
+        bateu = self.mover_e_colidir(dt, solidos, plataformas)
+
+        if bateu:
+            self.direcao *= -1 #se bateu também inverte o sentido
+
+        #define interação com o jogador
+        #no momento, faz o player respawnar caso colida, pois ainda não possui HP
+        if self.rect.colliderect(player.rect):
+            player.respawn()
