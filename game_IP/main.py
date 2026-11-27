@@ -56,12 +56,11 @@ while True:
     # dt é o delta time, extremamente importante: é o tempo que passou desde o último frame
     dt = relogio.tick(FPS) / 1000
 
-# sequencia lógica da run do jogo: eventos -> atualização das lógicas -> desenhamento -> disposição do que foi desenhado.
-while True:
+    # sequencia lógica da run do jogo: eventos -> atualização das lógicas -> desenhamento -> disposição do que foi desenhado.
 
     # dt é o delta time, extremamente importante: é o tempo que passou desde o último frame
-    dt = relogio.tick(FPS) / 1000
-    origin/criacao-de-inimigos-base
+
+    # origin/criacao-de-inimigos-base
     # importante para calcular quantidade de px / s, seja velocidade ou até mesmo aceleração
     # o relogio.tick(FPS) basicamente faz uma sincronização do jogo com os frames por segundo. Ele da um valor em ms
     # evita que o retangulo bugue para fora da tela ao minimizar a janela ou sair da tela.
