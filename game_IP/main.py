@@ -11,6 +11,8 @@ from settings import LARGURA, ALTURA, FPS, COR_FUNDO
 from player import Player
 from levels import Level1
 from menu import MenuPrincipal
+from colecionaveis import Sucata
+from hud import HUD
 # ===================================================
 
 pg.init()  # inicializa a biblioteca pygame.
@@ -30,14 +32,38 @@ player = Player(50, 150)
 menu = MenuPrincipal("Vetor Zero", ["Jogar", "Sair"])  # cria o menu
 menu_pausa = MenuPrincipal("PAUSA", ["Continuar Jogando", "Sair"])
 estado = "menu"  # começa no menu
+
+# Lista com todas as sucatas que existem na fase agora.
+# Cada Sucata(x, y) é um objeto novo, com seu próprio rect.
+lista_sucatas = [
+    Sucata(80, 180),    # em cima da plataforma 1
+    Sucata(180, 130),   # em cima da plataforma 2
+    Sucata(280, 80),    # em cima da plataforma 3 (a mais alta)
+    Sucata(390, 145),   # em cima da plataforma 5
+    Sucata(300, 238),   # no chão
+]
+
+# Contador de sucata que o jogador já pegou. Começa em 0.
+# (Por enquanto coloquei aqui no main.py pra não mexer no player.py no momento.)
+sucata_total = 0
+
+hud = HUD()  # cria o objeto HUD (a fonte é criada aqui dentro, uma vez só)
+
+
 # sequencia lógica da run do jogo: eventos -> atualização das lógicas -> desenhamento -> disposição do que foi desenhado.
 while True:
 
     # dt é o delta time, extremamente importante: é o tempo que passou desde o último frame
     dt = relogio.tick(FPS) / 1000
+
+# sequencia lógica da run do jogo: eventos -> atualização das lógicas -> desenhamento -> disposição do que foi desenhado.
+while True:
+
+    # dt é o delta time, extremamente importante: é o tempo que passou desde o último frame
+    dt = relogio.tick(FPS) / 1000
+    origin/criacao-de-inimigos-base
     # importante para calcular quantidade de px / s, seja velocidade ou até mesmo aceleração
     # o relogio.tick(FPS) basicamente faz uma sincronização do jogo com os frames por segundo. Ele da um valor em ms
-    # por isso dividimos por 1000, pra trabalhar o dt em seg.
     # evita que o retangulo bugue para fora da tela ao minimizar a janela ou sair da tela.
     dt = min(dt, 1 / 30)
 
@@ -83,13 +109,43 @@ while True:
     if not pausado and estado == "jogando":
         player.update(dt, levels.solidos, levels.plataformas)
 
+    # --- ATUALIZAÇÃO (só roda enquanto está jogando) ---
+    if estado == "jogando":
+        # gerenciador do ciclo de vida dos inimigos
+        for inimigo in levels.inimigos[:]:
+            inimigo.update(dt, levels.solidos, levels.plataformas,
+                           player, levels.projeteis_inimigos)
+            if not inimigo.vivo:
+                # remove inimigo morto da lista de inimigos
+                levels.inimigos.remove(inimigo)
+
+        # --- COLETA DE SUCATA ---
+        # Passa por cada sucata da lista, uma de cada vez.
+        for sucata in lista_sucatas:
+            # verifica se o jogador encostou no retângulo da sucata
+            if player.rect.colliderect(sucata.rect):
+                sucata.coletar()  # diz que a sucata foi coletada
+                sucata_total += sucata.valor  # soma o valor da sucata ao contador
+
+        # lista nova das sucatas que ainda não foram coletadas
+        nova_lista_sucatas = []
+        for sucata in lista_sucatas:
+            if not sucata.coletado:
+                nova_lista_sucatas.append(sucata)
+        lista_sucatas = nova_lista_sucatas
+
+    # --- DESENHO ---
     canvas.fill(COR_FUNDO)  # desenha essa cor base para toda a tela
 
     if estado == "menu":
         menu.draw(canvas)
     elif estado == "jogando":
         levels.draw(canvas)  # criação do level na tela
+        for sucata in lista_sucatas:  # desenha cada sucata que ainda não foi coletada
+            sucata.draw(canvas)
         player.draw(canvas)  # criação do player na tela
+        # HUD por último = fica por cima de tudo
+        hud.draw(canvas, sucata_total)
     elif estado == "pausa":
         menu_pausa.draw(canvas)
     pg.display.flip()  # dispõe na tela o que foi desenhado.

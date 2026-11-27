@@ -25,7 +25,23 @@ VEL_MAX_QUEDA = 500
 TEMPO_DESCER = 0.2
 VEL_DESCER = 75
 
+<<<<<<< HEAD
 # cor do menu do jogo
 COR_TITULO = (230, 230, 255)
 COR_TEXTO = (150, 160, 180)
 COR_SELECIONADO = (255, 210, 80)
+=======
+# Colecionáveis
+TAM_COLETAVEL = 8          # tamanho (px) do quadradinho do item (moeda)
+COR_SUCATA = (255, 200, 60) # cor amarela para a moeda
+VALOR_SUCATA = 1           # quanto cada sucata (moeda) vale
+
+# HUD (interface)
+COR_HUD_TEXTO = (220, 235, 245)  # cor do texto (branco azulado)
+TAM_FONTE_HUD = 18               # tamanho da letra (o canvas é pequeno: 480x270)
+MARGEM_HUD = 6                   # distância (px) entre o HUD e a borda da tela
+
+#Inimigos (valores base)
+COR_INIMIGO = (220, 60, 60) #inimigo de cor vermelha
+VEL_INIMIGO = 65 #velocidade do inimigo
+>>>>>>> origin/criacao-de-inimigos-base

@@ -1,5 +1,6 @@
 import pygame as pg
 from settings import LARGURA, ALTURA, COR_CHAO, COR_PLATAFORMA
+from inimigos import Patrulheiro
 
 # Desenha o chão inicial do jogo
 class Level1:
@@ -14,10 +15,20 @@ class Level1:
             pg.Rect(250, 200, 75, 8),
             pg.Rect(360, 165, 75, 8),
         ]
+
+        #inimigos em cima das plataformas
+        self.inimigos = [
+            Patrulheiro(260, 170),
+            Patrulheiro(275, 70),
+            Patrulheiro(300, 220),
+        ]
+        self.projeteis_inimigos = [] #util para inimigos atiradores futuramente
+
     def draw(self, tela):
         for s in self.solidos:
             pg.draw.rect(tela, COR_CHAO, s)
         for p in self.plataformas:
             pg.draw.rect(tela, COR_PLATAFORMA, p)
-
+        for inimigo in self.inimigos:
+            inimigo.draw(tela)
     
