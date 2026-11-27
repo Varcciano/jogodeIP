@@ -34,3 +34,7 @@ VALOR_SUCATA = 1           # quanto cada sucata (moeda) vale
 COR_HUD_TEXTO = (220, 235, 245)  # cor do texto (branco azulado)
 TAM_FONTE_HUD = 18               # tamanho da letra (o canvas é pequeno: 480x270)
 MARGEM_HUD = 6                   # distância (px) entre o HUD e a borda da tela
+
+#Inimigos (valores base)
+COR_INIMIGO = (220, 60, 60) #inimigo de cor vermelha
+VEL_INIMIGO = 65 #velocidade do inimigo
