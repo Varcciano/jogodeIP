@@ -8,35 +8,69 @@ customizado/feito nas outras será organizado e executado.
 import pygame as pg
 import sys
 from settings import LARGURA, ALTURA, FPS, COR_FUNDO
-from player import Player 
+from player import Player
 from levels import Level1
+from menu import MenuPrincipal
+from colecionaveis import Sucata
+from hud import HUD
 # ===================================================
 
-pg.init() # inicializa a biblioteca pygame.
+pg.init()  # inicializa a biblioteca pygame.
 larg_monitor, alt_monitor = pg.display.get_desktop_sizes()[0]
-escala_inicial = max(1, min(int(larg_monitor * 0.9) // LARGURA, int(alt_monitor * 0.85) // ALTURA))
+escala_inicial = max(1, min(int(larg_monitor * 0.9) //
+                     LARGURA, int(alt_monitor * 0.85) // ALTURA))
 tamanho_janela = (LARGURA * escala_inicial, ALTURA * escala_inicial)
 janela = pg.display.set_mode(tamanho_janela, pg.RESIZABLE)
-canvas = pg.Surface((LARGURA, ALTURA)) # jogo vai rolar visualmente aqui
+canvas = pg.Surface((LARGURA, ALTURA))  # jogo vai rolar visualmente aqui
 tela_cheia = False
-relogio = pg.time.Clock() # relogio pra contar o tempo
-pausado = False # utilizado para freezar o jogo quando for minizado, pra n ficar rodando em segunda instância
+relogio = pg.time.Clock()  # relogio pra contar o tempo
+pausado = False  # utilizado para freezar o jogo quando for minizado, pra n ficar rodando em segunda instância
 
-levels = Level1() # cria um objeto da classe Level1 da pasta de levels.py.
-player = Player(50, 150) # cria um objeto da classe Player da pasta de player.py.
+levels = Level1()  # cria um objeto da classe Level1 da pasta de levels.py.
+# cria um objeto da classe Player da pasta de player.py.
+player = Player(50, 150)
+menu = MenuPrincipal("Vetor Zero", ["Jogar", "Sair"])  # cria o menu
+menu_pausa = MenuPrincipal("PAUSA", ["Continuar Jogando", "Sair"])
+estado = "menu"  # começa no menu
 
-while True: # sequencia lógica da run do jogo: eventos -> atualização das lógicas -> desenhamento -> disposição do que foi desenhado.
+# Lista com todas as sucatas que existem na fase agora.
+# Cada Sucata(x, y) é um objeto novo, com seu próprio rect.
+lista_sucatas = [
+    Sucata(80, 180),    # em cima da plataforma 1
+    Sucata(180, 130),   # em cima da plataforma 2
+    Sucata(280, 80),    # em cima da plataforma 3 (a mais alta)
+    Sucata(390, 145),   # em cima da plataforma 5
+    Sucata(300, 238),   # no chão
+]
 
-    dt = relogio.tick(FPS) / 1000 # dt é o delta time, extremamente importante: é o tempo que passou desde o último frame
+# Contador de sucata que o jogador já pegou. Começa em 0.
+# (Por enquanto coloquei aqui no main.py pra não mexer no player.py no momento.)
+sucata_total = 0
+
+hud = HUD()  # cria o objeto HUD (a fonte é criada aqui dentro, uma vez só)
+
+
+# sequencia lógica da run do jogo: eventos -> atualização das lógicas -> desenhamento -> disposição do que foi desenhado.
+while True:
+
+    # dt é o delta time, extremamente importante: é o tempo que passou desde o último frame
+    dt = relogio.tick(FPS) / 1000
+
+    # sequencia lógica da run do jogo: eventos -> atualização das lógicas -> desenhamento -> disposição do que foi desenhado.
+
+    # dt é o delta time, extremamente importante: é o tempo que passou desde o último frame
+
+    # origin/criacao-de-inimigos-base
     # importante para calcular quantidade de px / s, seja velocidade ou até mesmo aceleração
     # o relogio.tick(FPS) basicamente faz uma sincronização do jogo com os frames por segundo. Ele da um valor em ms
-    # por isso dividimos por 1000, pra trabalhar o dt em seg.
-    dt = min(dt, 1 / 30) # evita que o retangulo bugue para fora da tela ao minimizar a janela ou sair da tela.
+    # evita que o retangulo bugue para fora da tela ao minimizar a janela ou sair da tela.
+    dt = min(dt, 1 / 30)
 
-    for evento in pg.event.get(): # pega todo tipo de evento que estiver rolando na tela. seja fechar, aperta tecla, clicar...
+    # pega todo tipo de evento que estiver rolando na tela. seja fechar, aperta tecla, clicar...
+    for evento in pg.event.get():
         if evento.type == pg.QUIT:
             pg.quit()
-            sys.exit() # fecha a tela e a instância do jogo
+            sys.exit()  # fecha a tela e a instância do jogo
         if evento.type == pg.WINDOWFOCUSLOST:
             pausado = True
         if evento.type == pg.WINDOWFOCUSGAINED:
@@ -47,19 +81,78 @@ while True: # sequencia lógica da run do jogo: eventos -> atualização das ló
                 janela = pg.display.set_mode((0, 0), pg.FULLSCREEN)
             else:
                 janela = pg.display.set_mode(tamanho_janela, pg.RESIZABLE)
-    
-    if not pausado: # so atualiza os eventos do jogo enquanto o jogador estiver jogando de fato. 
+
+        if estado == "menu":
+            acao = menu.processar_evento(evento)
+            if acao == "Jogar":
+                estado = "jogando"
+            elif acao == "Sair":
+                pg.quit()
+                sys.exit()
+        elif estado == "jogando":
+            if evento.type == pg.KEYDOWN and evento.key == pg.K_ESCAPE:
+                estado = "pausa"
+                menu_pausa.indice = 0
+
+        elif estado == "pausa":
+            if evento.type == pg.KEYDOWN and evento == pg.K_ESCAPE:
+                estado = "jogando"
+            acao = menu_pausa.processar_evento(evento)
+            if acao == "Continuar Jogando":
+                estado = "jogando"
+            elif acao == "Sair":
+                pg.quit()
+                sys.exit()
+
+    # so atualiza os eventos do jogo enquanto o jogador estiver jogando de fato.
+    if not pausado and estado == "jogando":
         player.update(dt, levels.solidos, levels.plataformas)
 
-    canvas.fill(COR_FUNDO) # desenha essa cor base para toda a tela
-    levels.draw(canvas) # criação do level na tela
-    player.draw(canvas) # criação do player na tela
-    pg.display.flip() # dispõe na tela o que foi desenhado.
+    # --- ATUALIZAÇÃO (só roda enquanto está jogando) ---
+    if estado == "jogando":
+        # gerenciador do ciclo de vida dos inimigos
+        for inimigo in levels.inimigos[:]:
+            inimigo.update(dt, levels.solidos, levels.plataformas,
+                           player, levels.projeteis_inimigos)
+            if not inimigo.vivo:
+                # remove inimigo morto da lista de inimigos
+                levels.inimigos.remove(inimigo)
+
+        # --- COLETA DE SUCATA ---
+        # Passa por cada sucata da lista, uma de cada vez.
+        for sucata in lista_sucatas:
+            # verifica se o jogador encostou no retângulo da sucata
+            if player.rect.colliderect(sucata.rect):
+                sucata.coletar()  # diz que a sucata foi coletada
+                sucata_total += sucata.valor  # soma o valor da sucata ao contador
+
+        # lista nova das sucatas que ainda não foram coletadas
+        nova_lista_sucatas = []
+        for sucata in lista_sucatas:
+            if not sucata.coletado:
+                nova_lista_sucatas.append(sucata)
+        lista_sucatas = nova_lista_sucatas
+
+    # --- DESENHO ---
+    canvas.fill(COR_FUNDO)  # desenha essa cor base para toda a tela
+
+    if estado == "menu":
+        menu.draw(canvas)
+    elif estado == "jogando":
+        levels.draw(canvas)  # criação do level na tela
+        for sucata in lista_sucatas:  # desenha cada sucata que ainda não foi coletada
+            sucata.draw(canvas)
+        player.draw(canvas)  # criação do player na tela
+        # HUD por último = fica por cima de tudo
+        hud.draw(canvas, sucata_total)
+    elif estado == "pausa":
+        menu_pausa.draw(canvas)
+    pg.display.flip()  # dispõe na tela o que foi desenhado.
 
     jw, jh = janela.get_size()
     esc = max(1, min(jw // LARGURA, jh // ALTURA))
     w, h = LARGURA * esc, ALTURA * esc
     janela.fill((0, 0, 0))   # faixas pretas se sobrar espaço
-    janela.blit(pg.transform.scale(canvas, (w, h)), ((jw - w) // 2, (jh - h) // 2))
+    janela.blit(pg.transform.scale(canvas, (w, h)),
+                ((jw - w) // 2, (jh - h) // 2))
     pg.display.flip()
-    
